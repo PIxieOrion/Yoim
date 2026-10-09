@@ -7,7 +7,6 @@ import PixieOrion.yoim.module.movement.VelocityModule;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 
 public final class PacketReceiveHandler {
@@ -50,47 +49,27 @@ public final class PacketReceiveHandler {
         if (module == null || !module.isEnabled() || !module.explosions.getValue()) return false;
 
         String mode = module.mode.getValue();
-        if (mode.equals("Normal")) {
-            if (packet.playerKnockback().isPresent()) {
-                Vec3d knockback = packet.playerKnockback().get();
-                double horizontal = module.horizontal.getValue().doubleValue() / 100.0D;
-                double vertical = module.vertical.getValue().doubleValue() / 100.0D;
-                Vec3dAccessor accessor = (Vec3dAccessor) (Object) knockback;
-                accessor.setX(knockback.x * horizontal);
-                accessor.setY(knockback.y * vertical);
-                accessor.setZ(knockback.z * horizontal);
-            }
+        if (packet.playerKnockback().isEmpty()) return false;
+
+        Vec3d knockback = packet.playerKnockback().get();
+        Vec3dAccessor accessor = (Vec3dAccessor) (Object) knockback;
+
+        if (mode.equals("Cancel")) {
+            // Keep the original explosion packet intact for Minecraft's normal
+            // sound, particles, and other effects; only remove its player knockback.
+            accessor.setX(0.0D);
+            accessor.setY(0.0D);
+            accessor.setZ(0.0D);
             return false;
         }
 
-        if (!mode.equals("Cancel")) return false;
-
-        Yoim.mc().executeSync(() -> {
-            if (Yoim.mc().world == null) return;
-            Vec3d center = packet.center();
-            Yoim.mc().world.playSound(
-                    null,
-                    center.getX(),
-                    center.getY(),
-                    center.getZ(),
-                    packet.explosionSound().value(),
-                    SoundCategory.BLOCKS,
-                    4.0F,
-                    (1.0F + (Yoim.mc().world.random.nextFloat() - Yoim.mc().world.random.nextFloat()) * 0.2F) * 0.7F,
-                    0L
-            );
-            Yoim.mc().world.addParticleClient(
-                    packet.explosionParticle(),
-                    true,
-                    false,
-                    center.getX(),
-                    center.getY(),
-                    center.getZ(),
-                    0.0D,
-                    0.0D,
-                    0.0D
-            );
-        });
-        return true;
+        if (mode.equals("Normal")) {
+            double horizontal = module.horizontal.getValue().doubleValue() / 100.0D;
+            double vertical = module.vertical.getValue().doubleValue() / 100.0D;
+            accessor.setX(knockback.x * horizontal);
+            accessor.setY(knockback.y * vertical);
+            accessor.setZ(knockback.z * horizontal);
+        }
+        return false;
     }
 }

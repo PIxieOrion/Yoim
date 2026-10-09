@@ -173,7 +173,9 @@ public final class KillAuraModule extends Module {
             if (entity.age < ticksExisted.getValue().intValue()) continue;
             if (entity instanceof LivingEntity living && living.getHealth() <= 0.0f) continue;
             if (!client.world.getWorldBorder().contains(entity.getBlockPos())) continue;
-            if (client.player.isTeammate(entity)) continue;
+            // Do not let the teammate check accidentally filter every remote player.
+            // Keep the existing teammate filter for non-player entities only.
+            if (!(entity instanceof PlayerEntity) && client.player.isTeammate(entity)) continue;
             if (!isValidEntity(entity)) continue;
 
             double boxDistance = entity.getBoundingBox().squaredMagnitude(eyePos);
