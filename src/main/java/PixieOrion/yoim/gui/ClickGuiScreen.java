@@ -1,6 +1,7 @@
 package PixieOrion.yoim.gui;
 
 import PixieOrion.yoim.Yoim;
+import PixieOrion.yoim.core.ConfigManager;
 import PixieOrion.yoim.module.Category;
 import PixieOrion.yoim.module.Module;
 import PixieOrion.yoim.module.client.ClickGuiModule;
@@ -57,7 +58,7 @@ public final class ClickGuiScreen extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        for (Frame frame : frames) if (frame.mouseClicked(click.x(), click.y(), click.button())) return true;
+        for (Frame frame : frames) { if (frame.mouseClicked(click.x(), click.y(), click.button())) { ConfigManager.save(Yoim.MODULES); return true; } }
         return super.mouseClicked(click, doubled);
     }
 
@@ -86,12 +87,14 @@ public final class ClickGuiScreen extends Screen {
             return true;
         }
         for (Frame frame : frames) frame.keyPressed(input);
+        ConfigManager.save(Yoim.MODULES);
         return true;
     }
 
     @Override
     public boolean charTyped(CharInput input) {
         for (Frame frame : frames) frame.charTyped(input);
+        ConfigManager.save(Yoim.MODULES);
         return true;
     }
 

@@ -1,6 +1,7 @@
 package PixieOrion.yoim.core;
 
 import PixieOrion.yoim.Yoim;
+import PixieOrion.yoim.core.ConfigManager;
 import PixieOrion.yoim.module.Category;
 import PixieOrion.yoim.module.Module;
 import PixieOrion.yoim.module.client.ClickGuiModule;
@@ -14,6 +15,7 @@ import PixieOrion.yoim.module.render.FullBrightModule;
 import PixieOrion.yoim.module.render.NoRenderModule;
 import PixieOrion.yoim.module.render.ShadersModule;
 import PixieOrion.yoim.module.render.NameTagsModule;
+import PixieOrion.yoim.module.player.FakePlayerModule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +33,7 @@ public final class ModuleManager {
 
     public void registerDefaults() {
         register(new KillAuraModule());
+        register(new FakePlayerModule());
         register(new VelocityModule());
         register(new SpeedModule());
         register(new NoSlowModule());
@@ -66,7 +69,7 @@ public final class ModuleManager {
             boolean pressed = isPressed(windowHandle, key);
             int identity = System.identityHashCode(module);
             boolean previous = previousBindState.getOrDefault(identity, false);
-            if (allowToggles && pressed && !previous) module.toggle();
+            if (allowToggles && pressed && !previous) { module.toggle(); ConfigManager.save(this); }
             previousBindState.put(identity, pressed);
         }
     }

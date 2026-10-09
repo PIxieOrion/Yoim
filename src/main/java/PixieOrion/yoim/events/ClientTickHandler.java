@@ -5,6 +5,7 @@ import PixieOrion.yoim.gui.ClickGuiScreen;
 import PixieOrion.yoim.module.client.ClickGuiModule;
 import PixieOrion.yoim.module.combat.KillAuraModule;
 import PixieOrion.yoim.module.render.FullBrightModule;
+import PixieOrion.yoim.module.player.FakePlayerModule;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
@@ -27,6 +28,8 @@ public final class ClientTickHandler {
             Yoim.MODULES.pollBinds(client.getWindow().getHandle(), !guiWasOpen && !(client.currentScreen instanceof ClickGuiScreen));
             KillAuraModule aura = Yoim.MODULES.get(KillAuraModule.class);
             if (aura != null) aura.attackTick();
+            FakePlayerModule fakePlayer = Yoim.MODULES.get(FakePlayerModule.class);
+            if (fakePlayer != null) fakePlayer.tick();
             FullBrightModule fullBright = Yoim.MODULES.get(FullBrightModule.class);
             if (fullBright != null) fullBright.tick();
         });
