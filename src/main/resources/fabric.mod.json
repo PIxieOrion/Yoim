@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "yoim",
+  "version": "${version}",
+  "name": "Yoim",
+  "description": "Open-source client-side utility framework for Minecraft 1.21.11.",
+  "authors": [
+    "PixieOrion"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "PixieOrion.yoim.Yoim"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "1.21.11",
+    "fabric-api": "*"
+  },
+  "mixins": [
+    "yoim.mixins.json"
+  ]
+}

@@ -1,0 +1,3 @@
+pluginManagement { repositories { maven { url = 'https://maven.fabricmc.net/' }; gradlePluginPortal(); mavenCentral() } }
+dependencyResolutionManagement { repositories { maven { url = 'https://maven.fabricmc.net/' }; mavenCentral() } }
+rootProject.name = 'Yoim'
