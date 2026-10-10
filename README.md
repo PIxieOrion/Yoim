@@ -4,8 +4,6 @@ Yoim is an open-source Minecraft client built on Fabric for Minecraft Java Editi
 
 The project focuses on modular architecture, customizable visuals, and convenient client-side features.
 
-## Screenshots
-
 ### ClickGUI
 
 ![Yoim ClickGUI](screenshots/clickgui.jpg)
